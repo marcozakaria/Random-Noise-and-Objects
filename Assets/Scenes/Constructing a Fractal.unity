@@ -150,6 +150,7 @@ MonoBehaviour:
   minWaitForSeconds: 0.1
   maxWaitForSeconds: 0.5
   spawnPropapilty: 0.7
+  maxRotationSpeed: 60
 --- !u!4 &407855873
 Transform:
   m_ObjectHideFlags: 0

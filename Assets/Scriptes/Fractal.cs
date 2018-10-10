@@ -14,7 +14,10 @@ public class Fractal : MonoBehaviour
     public float maxWaitForSeconds = 0.5f;
     [Range(0,1)]
     public float spawnPropapilty;
+    [Range(0, 100)]
+    public float maxRotationSpeed;
 
+    private float rotationSpeed;
     private int depth;
 
     private Material[,] materialsArray; // hold two colors to get random one
@@ -40,6 +43,8 @@ public class Fractal : MonoBehaviour
 
     private void Start()
     {
+        rotationSpeed = Random.Range(-maxRotationSpeed, maxRotationSpeed);
+
         if (materialsArray == null)
         {
             MaterialIntilization();
@@ -52,6 +57,11 @@ public class Fractal : MonoBehaviour
         {
             StartCoroutine(CreateChildern());
         }       
+    }
+
+    private void Update()
+    {
+        transform.Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
     }
 
     private static Vector3[] childDirections = {
@@ -84,6 +94,7 @@ public class Fractal : MonoBehaviour
         childScale = parent.childScale;
         transform.parent = parent.transform;
         spawnPropapilty = parent.spawnPropapilty;
+        maxRotationSpeed = parent.maxRotationSpeed;
 
         transform.localScale = Vector3.one * childScale;
         transform.localPosition = childDirections[index] * (0.5f * childScale + 0.5f);
