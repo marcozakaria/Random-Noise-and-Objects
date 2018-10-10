@@ -8,15 +8,45 @@ public class Fractal : MonoBehaviour
     public Material material;
 
     public float childScale;
+    [Range(1,7)]
     public int maxDepth;
-    public float waitForSeconds;
+    public float minWaitForSeconds = 0.1f;
+    public float maxWaitForSeconds = 0.5f;
 
     private int depth;
 
+    private Material[,] materialsArray; // hold two colors to get random one
+
+    private void MaterialIntilization()
+    {
+        materialsArray = new Material[maxDepth+1,2];
+        for (int i = 0; i <= maxDepth; i++)
+        {
+            float t = i / (maxDepth - 1f);
+            Debug.Log(t +" Square " + t * t);
+            materialsArray[i, 0] = new Material(material)
+            {
+                color = Color.Lerp(Color.white, Color.red, t)
+            };
+            materialsArray[i, 1] = new Material(material)
+            {
+                color = Color.Lerp(Color.white, Color.cyan, t)
+            };
+        }
+        materialsArray[maxDepth, 0].color = Color.magenta;
+        materialsArray[maxDepth, 1].color = Color.yellow;
+    }
+
     private void Start()
     {
+        if (materialsArray == null)
+        {
+            MaterialIntilization();
+        }
+
         gameObject.AddComponent<MeshFilter>().mesh = mesh;
-        gameObject.AddComponent<MeshRenderer>().material = material;
+        gameObject.AddComponent<MeshRenderer>().material = materialsArray[depth,Random.Range(0,2)];
+
         if (depth < maxDepth)
         {
             StartCoroutine(CreateChildern());
@@ -35,7 +65,7 @@ public class Fractal : MonoBehaviour
     {
         for (int i = 0; i < childDirections.Length; i++)
         {
-            yield return new WaitForSeconds(waitForSeconds);
+            yield return new WaitForSeconds(Random.Range(minWaitForSeconds,maxWaitForSeconds) );
             new GameObject("Fractal Child").AddComponent<Fractal>().Initialize(this, i);
         }
         
@@ -44,7 +74,7 @@ public class Fractal : MonoBehaviour
     private void Initialize(Fractal parent, int index)
     {
         mesh = parent.mesh;
-        material = parent.material;
+        materialsArray = parent.materialsArray;
         maxDepth = parent.maxDepth;
         depth = parent.depth + 1;
         childScale = parent.childScale;

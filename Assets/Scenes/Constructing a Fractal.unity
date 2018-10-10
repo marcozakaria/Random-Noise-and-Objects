@@ -143,8 +143,9 @@ MonoBehaviour:
   mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   material: {fileID: 2100000, guid: 210055bd1753a4d43a6cd2c14c1b8ee2, type: 2}
   childScale: 0.5
-  maxDepth: 7
-  waitForSeconds: 0.5
+  maxDepth: 4
+  minWaitForSeconds: 0.1
+  maxWaitForSeconds: 0.5
 --- !u!4 &407855873
 Transform:
   m_ObjectHideFlags: 0
