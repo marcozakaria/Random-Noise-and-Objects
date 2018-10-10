@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Fractal : MonoBehaviour
 {
-    public Mesh mesh;
+    public Mesh[] meshs;
     public Material material;
 
     public float childScale;
@@ -12,6 +12,8 @@ public class Fractal : MonoBehaviour
     public int maxDepth;
     public float minWaitForSeconds = 0.1f;
     public float maxWaitForSeconds = 0.5f;
+    [Range(0,1)]
+    public float spawnPropapilty;
 
     private int depth;
 
@@ -23,7 +25,6 @@ public class Fractal : MonoBehaviour
         for (int i = 0; i <= maxDepth; i++)
         {
             float t = i / (maxDepth - 1f);
-            Debug.Log(t +" Square " + t * t);
             materialsArray[i, 0] = new Material(material)
             {
                 color = Color.Lerp(Color.white, Color.red, t)
@@ -44,7 +45,7 @@ public class Fractal : MonoBehaviour
             MaterialIntilization();
         }
 
-        gameObject.AddComponent<MeshFilter>().mesh = mesh;
+        gameObject.AddComponent<MeshFilter>().mesh = meshs[Random.Range(0,meshs.Length)];
         gameObject.AddComponent<MeshRenderer>().material = materialsArray[depth,Random.Range(0,2)];
 
         if (depth < maxDepth)
@@ -65,20 +66,24 @@ public class Fractal : MonoBehaviour
     {
         for (int i = 0; i < childDirections.Length; i++)
         {
-            yield return new WaitForSeconds(Random.Range(minWaitForSeconds,maxWaitForSeconds) );
-            new GameObject("Fractal Child").AddComponent<Fractal>().Initialize(this, i);
+            if (Random.value < spawnPropapilty)
+            {
+                yield return new WaitForSeconds(Random.Range(minWaitForSeconds, maxWaitForSeconds));
+                new GameObject("Fractal Child").AddComponent<Fractal>().Initialize(this, i);
+            }
         }
         
     }
 
     private void Initialize(Fractal parent, int index)
     {
-        mesh = parent.mesh;
+        meshs = parent.meshs;
         materialsArray = parent.materialsArray;
         maxDepth = parent.maxDepth;
         depth = parent.depth + 1;
         childScale = parent.childScale;
         transform.parent = parent.transform;
+        spawnPropapilty = parent.spawnPropapilty;
 
         transform.localScale = Vector3.one * childScale;
         transform.localPosition = childDirections[index] * (0.5f * childScale + 0.5f);
