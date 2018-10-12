@@ -24,6 +24,8 @@ public class NucleonSpawner : MonoBehaviour
     {
         Nucleon prephap = nucleonPrephaps[Random.Range(0, nucleonPrephaps.Length)];
         Nucleon spawn = Instantiate<Nucleon>(prephap);
+        spawn.transform.parent = this.transform;
+        //spawn.GetComponent<MeshRenderer>().material.color = Random.ColorHSV();
         spawn.transform.localPosition = Random.onUnitSphere * spawnDistance;
     }
 }

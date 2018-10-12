@@ -162,7 +162,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: Average
 --- !u!222 &195399921
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -237,7 +237,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: Higheset
 --- !u!222 &346279214
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -334,6 +334,7 @@ GameObject:
   m_Component:
   - component: {fileID: 609288846}
   - component: {fileID: 609288845}
+  - component: {fileID: 609288847}
   m_Layer: 0
   m_Name: FPSCounter
   m_TagString: Untagged
@@ -352,9 +353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8c427783b0098242a360b1aa9e9c34b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AverageFPSCounterText: {fileID: 195399920}
-  LowestFPSCounterText: {fileID: 1035292416}
-  HighestFPSCounterText: {fileID: 346279213}
   frameRange: 60
 --- !u!4 &609288846
 Transform:
@@ -369,6 +367,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &609288847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 609288844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c00e697fcf28e04287a693c8b999025, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AverageFPSCounterText: {fileID: 195399920}
+  LowestFPSCounterText: {fileID: 1035292416}
+  HighestFPSCounterText: {fileID: 346279213}
 --- !u!1 &786355023
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,7 +628,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: Lowest
 --- !u!1 &1649503719
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,6 +661,7 @@ MonoBehaviour:
   nucleonPrephaps:
   - {fileID: 114316793949888030, guid: e09ad5de709e0e54d95c946eca5f74e5, type: 2}
   - {fileID: 114398993298368498, guid: 6a0da9c4f326d5e43beafef17c8b47de, type: 2}
+  - {fileID: 114398993298368498, guid: 8c0d7892c3ec2cf4780a1b2509559822, type: 2}
 --- !u!4 &1649503721
 Transform:
   m_ObjectHideFlags: 0
