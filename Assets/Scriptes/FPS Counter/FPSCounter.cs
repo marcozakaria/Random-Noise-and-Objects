@@ -9,8 +9,8 @@ public class FPSCounter : MonoBehaviour
     public int frameRange = 60;
 
     public int AverageFPS { get; private set; }      // to be get from a diffrent scriptes
-    public int HighestFPS { get; private set; }
-    public int LowestFPS { get; private set; }
+    public int HighestFPS { get; private set; }     // highest FPS in each frameRate
+    public int LowestFPS { get; private set; }      // lowest FPS in each frameRate
 
     int[] bufferFPS;
     int indexFPSbuffer;   
