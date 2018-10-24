@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameObjectSpawner : PersistableObject
 {
-    public PersistableObject prefap;
+    //public PersistableObject prefap;
+    public ShapeFactory shapeFactory;
 
     public KeyCode createKey = KeyCode.C;
     public KeyCode newGameKey = KeyCode.N;
@@ -13,11 +14,11 @@ public class GameObjectSpawner : PersistableObject
 
     public PersistentStorage storage;
 
-    List<PersistableObject> objects;
+    List<Shape> shapes;
 
     private void Awake()
     {
-        objects = new List<PersistableObject>();
+        shapes = new List<Shape>();
     }
 
     private void Update()
@@ -43,29 +44,30 @@ public class GameObjectSpawner : PersistableObject
 
     void BeginNewGame()
     {
-        for (int i = 0; i < objects.Count; i++)
+        for (int i = 0; i < shapes.Count; i++)
         {
-            Destroy(objects[i].gameObject);
+            Destroy(shapes[i].gameObject);
         }
-        objects.Clear(); 
+        shapes.Clear(); 
     }
 
     void CreateObject()
     {
-        PersistableObject o = Instantiate(prefap);
-        Transform objectT = o.transform;
+        //PersistableObject o = Instantiate(prefap);
+        Shape instance = shapeFactory.GetRandom();
+        Transform objectT = instance.transform;
         objectT.localPosition = Random.onUnitSphere * 5f;
         objectT.localRotation = Random.rotation;
         objectT.localScale = Vector3.one * Random.Range(0.1f, 1f);
-        objects.Add(o);   
+        shapes.Add(instance);   
     }
 
     public override void Save(GameDataWritter writer)
     {
-        writer.Write(objects.Count);
-        for (int i = 0; i < objects.Count; i++)
+        writer.Write(shapes.Count);
+        for (int i = 0; i < shapes.Count; i++)
         {
-            objects[i].Save(writer);
+            shapes[i].Save(writer);
         }
     }
 
@@ -74,9 +76,10 @@ public class GameObjectSpawner : PersistableObject
         int count = reader.ReadInt();
         for (int i = 0; i < count; i++)
         {
-            PersistableObject o = Instantiate(prefap);
-            o.Load(reader);
-            objects.Add(o);
+            //PersistableObject o = Instantiate(prefap);
+            Shape rename = shapeFactory.Get(0);
+            rename.Load(reader);
+            shapes.Add(rename);
         }
     }
 }
