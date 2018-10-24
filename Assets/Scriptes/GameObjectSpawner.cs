@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameObjectSpawner : PersistableObject
 {
     //public PersistableObject prefap;
-    public ShapeFactory shapeFactory;
+    public ShapeFactory shapeFactory;  // shape factory contains our shapes
 
     public KeyCode createKey = KeyCode.C;
     public KeyCode newGameKey = KeyCode.N;
@@ -33,7 +33,7 @@ public class GameObjectSpawner : PersistableObject
         }
         else if (Input.GetKeyDown(saveKey))
         {
-            storage.Save(this); // this refer to persistance object
+            storage.Save(this); // this refer to persistanceObject class
         }
         else if (Input.GetKeyDown(loadKey))
         {

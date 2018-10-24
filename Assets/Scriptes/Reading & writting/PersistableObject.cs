@@ -4,7 +4,7 @@
 public class PersistableObject : MonoBehaviour
 {
     // save all transform component data 
-    public virtual void Save(GameDataWritter writer)
+    public virtual void Save(GameDataWritter writer) // make it virtual to override from it
     {
         writer.Write(transform.localPosition);
         writer.Write(transform.localRotation);
