@@ -5,6 +5,7 @@ public class GameDataWritter
 {
     BinaryWriter writer;
 
+    // to facilate for us reading and writting difrent types
     public GameDataWritter(BinaryWriter writer)
     {
         this.writer = writer;

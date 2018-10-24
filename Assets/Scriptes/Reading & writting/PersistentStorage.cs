@@ -7,7 +7,8 @@ public class PersistentStorage : MonoBehaviour
 
     void Awake()
     {
-        savePath = Path.Combine(Application.persistentDataPath, "saveFile");
+        savePath = Path.Combine("C:/Users/marco/Documents/Unity Projects/Random-Noise-and-Objects/Save Files", "saveFile");
+        Debug.Log(Application.persistentDataPath);
     }
 
     public void Save(PersistableObject o)
@@ -17,6 +18,7 @@ public class PersistentStorage : MonoBehaviour
         )
         {
             o.Save(new GameDataWritter(writer));
+            Debug.Log("Saved");
         }
     }
 
