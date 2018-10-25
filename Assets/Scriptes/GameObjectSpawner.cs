@@ -71,6 +71,7 @@ public class GameObjectSpawner : PersistableObject
         for (int i = 0; i < shapes.Count; i++)
         {
             writer.Write(shapes[i].ShapeID);
+            writer.Write(shapes[i].MaterialID);
             shapes[i].Save(writer);
         }
     }
@@ -78,7 +79,7 @@ public class GameObjectSpawner : PersistableObject
     public override void Load(GameDataReader reader)
     {
         int version = -reader.ReadInt();
-        if (version > saveVersion) // see the version if it is heiher return
+        if (version > saveVersion) // see the version if it is eiher return
         {
             Debug.LogError("Uspported Version");
             return;
@@ -86,8 +87,9 @@ public class GameObjectSpawner : PersistableObject
         int count = version < 0 ? -version : reader.ReadInt();
         for (int i = 0; i < count; i++)
         {
-            int shapeid = reader.ReadInt();
-            Shape instance = shapeFactory.Get(shapeid);
+            int shapeid = version > 0 ? reader.ReadInt() : 0;  // to avoid old save file conflicts
+            int materialid = version > 0 ? reader.ReadInt() : 0;
+            Shape instance = shapeFactory.Get(shapeid,materialid);
             instance.Load(reader);
             shapes.Add(instance);
         }
