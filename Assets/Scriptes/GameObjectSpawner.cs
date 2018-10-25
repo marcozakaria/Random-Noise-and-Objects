@@ -61,6 +61,7 @@ public class GameObjectSpawner : PersistableObject
         objectT.localPosition = Random.onUnitSphere * 5f;
         objectT.localRotation = Random.rotation;
         objectT.localScale = Vector3.one * Random.Range(0.1f, 1f);
+        instance.SetColor(Random.ColorHSV());
         shapes.Add(instance);   
     }
 

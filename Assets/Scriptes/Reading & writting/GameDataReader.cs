@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GameDataReader
 {
+    
     BinaryReader reader;
 
     public GameDataReader(BinaryReader reader)
@@ -37,5 +38,15 @@ public class GameDataReader
         value.y = reader.ReadSingle();
         value.z = reader.ReadSingle();
         return value;
+    }
+
+    public Color ReadColor()
+    {
+        Color color;
+        color.r = reader.ReadSingle();
+        color.g = reader.ReadSingle();
+        color.b = reader.ReadSingle();
+        color.a = reader.ReadSingle();
+        return color;
     }
 }
