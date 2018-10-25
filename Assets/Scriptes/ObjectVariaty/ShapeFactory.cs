@@ -9,6 +9,7 @@ public class ShapeFactory : ScriptableObject
     [SerializeField]
     Material[] materials;
 
+    // it returns an instance of shape with specific shape and materil
     public Shape Get ( int shapeID=0 ,int materialID=0) // default value of zero if we didnt give it a value
     {   
         Shape instance = Instantiate(prefaps[shapeID]);
@@ -17,6 +18,7 @@ public class ShapeFactory : ScriptableObject
         return instance;
     }
 
+    // returns a random shape with random material type
     public Shape GetRandom()
     {
         return Get(Random.Range(0, prefaps.Length), Random.Range(0, materials.Length));

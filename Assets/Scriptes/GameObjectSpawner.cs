@@ -54,26 +54,25 @@ public class GameObjectSpawner : PersistableObject
     }
 
     void CreateObject()
-    {
-        //PersistableObject o = Instantiate(prefap);
+    {   // create a random object
         Shape instance = shapeFactory.GetRandom();
         Transform objectT = instance.transform;
         objectT.localPosition = Random.onUnitSphere * 5f;
         objectT.localRotation = Random.rotation;
         objectT.localScale = Vector3.one * Random.Range(0.1f, 1f);
         instance.SetColor(Random.ColorHSV());
-        shapes.Add(instance);   
+        shapes.Add(instance);   // add shape to the list
     }
 
     public override void Save(GameDataWritter writer)
     {
-        writer.Write(-saveVersion);
+        writer.Write(-saveVersion); // put version in negative to help us detect if the sve file wasdone on older versions of the game
         writer.Write(shapes.Count);
         for (int i = 0; i < shapes.Count; i++)
         {
-            writer.Write(shapes[i].ShapeID);
+            writer.Write(shapes[i].ShapeID);    // save shapeId and materialID first 
             writer.Write(shapes[i].MaterialID);
-            shapes[i].Save(writer);
+            shapes[i].Save(writer);         // then call th save function in shape class 
         }
     }
 

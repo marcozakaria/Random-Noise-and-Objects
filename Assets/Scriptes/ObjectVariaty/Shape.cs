@@ -54,7 +54,7 @@ public class Shape : PersistableObject
         meshRenderer.SetPropertyBlock(sharedPropertyBlock);
     }
 
-    public override void Save(GameDataWritter writer) // ovweeide to add save color functionaliy
+    public override void Save(GameDataWritter writer) // override from persistanceObject Class to add save color functionaliy
     {
         base.Save(writer);
         writer.Write(color);
