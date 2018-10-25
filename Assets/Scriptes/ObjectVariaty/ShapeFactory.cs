@@ -7,8 +7,10 @@ public class ShapeFactory : ScriptableObject
     Shape[] prefaps;
 
     public Shape Get ( int shapeID)
-    {
-        return Instantiate(prefaps[shapeID]);
+    {   
+        Shape instance = Instantiate(prefaps[shapeID]);
+        instance.ShapeID = shapeID;
+        return instance;
     }
 
     public Shape GetRandom()

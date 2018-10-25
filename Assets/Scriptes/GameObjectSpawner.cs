@@ -16,6 +16,8 @@ public class GameObjectSpawner : PersistableObject
 
     List<Shape> shapes;
 
+    const int saveVersion = 1;
+
     private void Awake()
     {
         shapes = new List<Shape>();
@@ -64,22 +66,30 @@ public class GameObjectSpawner : PersistableObject
 
     public override void Save(GameDataWritter writer)
     {
+        writer.Write(-saveVersion);
         writer.Write(shapes.Count);
         for (int i = 0; i < shapes.Count; i++)
         {
+            writer.Write(shapes[i].ShapeID);
             shapes[i].Save(writer);
         }
     }
 
     public override void Load(GameDataReader reader)
     {
-        int count = reader.ReadInt();
+        int version = -reader.ReadInt();
+        if (version > saveVersion) // see the version if it is heiher return
+        {
+            Debug.LogError("Uspported Version");
+            return;
+        }
+        int count = version < 0 ? -version : reader.ReadInt();
         for (int i = 0; i < count; i++)
         {
-            //PersistableObject o = Instantiate(prefap);
-            Shape rename = shapeFactory.Get(0);
-            rename.Load(reader);
-            shapes.Add(rename);
+            int shapeid = reader.ReadInt();
+            Shape instance = shapeFactory.Get(shapeid);
+            instance.Load(reader);
+            shapes.Add(instance);
         }
     }
 }
