@@ -46,7 +46,7 @@ public class Shape : PersistableObject
     {
         this.color = color;
         //meshRenderer.material.color = color;
-        if (sharedPropertyBlock == null)
+        if (sharedPropertyBlock == null) 
         {
             sharedPropertyBlock = new MaterialPropertyBlock(); // use material property to improve performance becuse objects usees the same materials but with diffrent colors
         }
