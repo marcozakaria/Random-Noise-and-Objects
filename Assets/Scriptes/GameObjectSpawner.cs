@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,11 @@ public class GameObjectSpawner : PersistableObject
     public KeyCode saveKey = KeyCode.S;
     public KeyCode loadKey = KeyCode.L;
     public KeyCode destroyKey = KeyCode.X;
+
+    public float CreationSpeed { get; set; } // to get and set value from slider in the gui
+    public float DistructionSpeed { get; set; } // to get value from slider in the gui
+
+    float creationProgress , distructionProgress; // when it reaches one a new shape will be created
 
     public PersistentStorage storage;
 
@@ -47,7 +53,22 @@ public class GameObjectSpawner : PersistableObject
         {
             DestroyShape();
         }
+
+        creationProgress += Time.deltaTime * CreationSpeed;
+        while (creationProgress >= 1f)  // we used while to avoid frame dimed situations
+        {
+            creationProgress -= 1f;
+            CreateObject();
+        }
+
+        distructionProgress += Time.deltaTime * DistructionSpeed;
+        while (distructionProgress >= 1f)  // we used while to avoid frame dimed situations
+        {
+            distructionProgress -= 1f;
+            DestroyShape();
+        }
     }
+
 
     void BeginNewGame()
     {
