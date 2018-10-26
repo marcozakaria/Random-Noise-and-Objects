@@ -12,10 +12,11 @@
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf Standard fullforwardshadows
-        // Use Shader model 3.0 target
-
+        
+		//  Assuming uniform scaling makes instancing more efficient as it requires less data, and works because all our shapes use a uniform scale.
 		#pragma instancing_options assumeuniformscaling
 
+		// Use Shader model 3.0 target
         #pragma target 3.0
         sampler2D _MainTex;
         struct Input {

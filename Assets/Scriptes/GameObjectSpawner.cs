@@ -11,6 +11,7 @@ public class GameObjectSpawner : PersistableObject
     public KeyCode newGameKey = KeyCode.N;
     public KeyCode saveKey = KeyCode.S;
     public KeyCode loadKey = KeyCode.L;
+    public KeyCode destroyKey = KeyCode.X;
 
     public PersistentStorage storage;
 
@@ -42,6 +43,10 @@ public class GameObjectSpawner : PersistableObject
             BeginNewGame();
             storage.Load(this);
         }
+        else if (Input.GetKeyDown(destroyKey))
+        {
+            DestroyShape();
+        }
     }
 
     void BeginNewGame()
@@ -51,6 +56,21 @@ public class GameObjectSpawner : PersistableObject
             Destroy(shapes[i].gameObject);
         }
         shapes.Clear(); 
+    }
+
+    void DestroyShape()
+    {
+        if (shapes.Count > 0)
+        {
+            int index = Random.Range(0, shapes.Count);
+            Destroy(shapes[index].gameObject);
+
+            // when we destroy object a gab in the list occur 
+            // we shift last element to it then we remove refrence of last one
+            int lastIndex = shapes.Count - 1;
+            shapes[index] = shapes[lastIndex];
+            shapes.RemoveAt(lastIndex);     // remove refrence of last object
+        }
     }
 
     void CreateObject()
