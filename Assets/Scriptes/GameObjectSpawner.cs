@@ -74,7 +74,8 @@ public class GameObjectSpawner : PersistableObject
     {
         for (int i = 0; i < shapes.Count; i++)
         {
-            Destroy(shapes[i].gameObject);
+            //Destroy(shapes[i].gameObject);
+            shapeFactory.Reclaim(shapes[i]);
         }
         shapes.Clear(); 
     }
@@ -84,7 +85,8 @@ public class GameObjectSpawner : PersistableObject
         if (shapes.Count > 0)
         {
             int index = Random.Range(0, shapes.Count);
-            Destroy(shapes[index].gameObject);
+            //Destroy(shapes[index].gameObject);
+            shapeFactory.Reclaim(shapes[index]); // whether to return to the pool or destroy it
 
             // when we destroy object a gab in the list occur 
             // we shift last element to it then we remove refrence of last one
