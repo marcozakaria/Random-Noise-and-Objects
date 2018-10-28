@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 [CreateAssetMenu]
 public class ShapeFactory : ScriptableObject
@@ -15,6 +16,8 @@ public class ShapeFactory : ScriptableObject
 
     List<Shape>[] pools;
 
+    Scene poolScene;
+
     void CreatePools()
     {
         pools = new List<Shape>[prefaps.Length];
@@ -22,6 +25,28 @@ public class ShapeFactory : ScriptableObject
         {
             pools[i] = new List<Shape>();
         }
+
+        if (Application.isEditor)
+        {
+            // Scene is a struct not a direct reference to the actual scene. As it is not serializable, 
+            //A recompilation resets the struct to its default values, which indicates an unloaded scene.
+            poolScene = SceneManager.GetSceneByName(name);
+            if (poolScene.isLoaded)
+            {
+                GameObject[] rootObjects = poolScene.GetRootGameObjects(); // to get instances that webt inactive before recompilation
+                for (int i = 0; i < rootObjects.Length; i++)
+                {
+                    Shape pooledShape = rootObjects[i].GetComponent<Shape>();
+                    if (!pooledShape.gameObject.activeSelf)  // if not active
+                    {
+                        pools[pooledShape.ShapeID].Add(pooledShape);
+                    }
+                }
+                return;
+            }
+        }
+
+        poolScene = SceneManager.CreateScene(name);  // give it the name of the object "ShapeFactory"
     }
 
     // it returns an instance of shape with specific shape and materil
@@ -48,6 +73,8 @@ public class ShapeFactory : ScriptableObject
             {   // if empty instanciate new object 
                 instance = Instantiate(prefaps[shapeID]);
                 instance.ShapeID = shapeID;
+
+                SceneManager.MoveGameObjectToScene(instance.gameObject, poolScene);
             }
             instance.gameObject.SetActive(true);
             

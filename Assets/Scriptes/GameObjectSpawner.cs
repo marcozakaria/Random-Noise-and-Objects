@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameObjectSpawner : PersistableObject
 {
@@ -14,6 +15,8 @@ public class GameObjectSpawner : PersistableObject
     public KeyCode loadKey = KeyCode.L;
     public KeyCode destroyKey = KeyCode.X;
 
+    public int levelCount; // number of levels
+
     public float CreationSpeed { get; set; } // to get and set value from slider in the gui
     public float DistructionSpeed { get; set; } // to get value from slider in the gui
 
@@ -23,11 +26,29 @@ public class GameObjectSpawner : PersistableObject
 
     List<Shape> shapes;
 
-    const int saveVersion = 1;
+    const int saveVersion = 2;
 
-    private void Awake()
+    int loadedLevelBuildIndex; // keep track which level is loaded
+
+    private void Start()
     {
         shapes = new List<Shape>();
+
+        if (Application.isEditor)
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)  // scene count total numbers of loaded scenes
+            {
+                Scene loadedLevel = SceneManager.GetSceneAt(i);
+                if (loadedLevel.name.Contains("Level "))  // see if level 1,2 is loaded or not  before loading it in editor mode
+                {
+                    SceneManager.SetActiveScene(loadedLevel);
+                    loadedLevelBuildIndex = loadedLevel.buildIndex;
+                    return;
+                }
+            }          
+        }
+
+        StartCoroutine( LoadLevel(1));
     }
 
     private void Update()
@@ -53,6 +74,18 @@ public class GameObjectSpawner : PersistableObject
         {
             DestroyShape();
         }
+        else
+        {
+            for (int i = 1; i <= levelCount; i++)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+                {
+                    BeginNewGame(); // clean every thing first
+                    StartCoroutine(LoadLevel(i));
+                    return;
+                }
+            }
+        }
 
         creationProgress += Time.deltaTime * CreationSpeed;
         while (creationProgress >= 1f)  // we used while to avoid frame dimed situations
@@ -69,6 +102,21 @@ public class GameObjectSpawner : PersistableObject
         }
     }
 
+    IEnumerator LoadLevel(int levelBuildIndex)
+    {
+        enabled = false; // disable until we load the scene to avoid errors
+        if (loadedLevelBuildIndex > 0)
+        {           // remove exisint scene first before adding new one
+            yield return SceneManager.UnloadSceneAsync(loadedLevelBuildIndex);
+        }
+
+        // wait a  for the scene to be loaded first
+        yield return SceneManager.LoadSceneAsync(levelBuildIndex, LoadSceneMode.Additive); // add scene to current opened one
+
+        SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(levelBuildIndex)); // make it active because it contains our light
+        loadedLevelBuildIndex = levelBuildIndex;
+        enabled = true;
+    }
 
     void BeginNewGame()
     {
@@ -111,6 +159,7 @@ public class GameObjectSpawner : PersistableObject
     {
         writer.Write(-saveVersion); // put version in negative to help us detect if the sve file wasdone on older versions of the game
         writer.Write(shapes.Count);
+        writer.Write(loadedLevelBuildIndex);  // save which level we were on
         for (int i = 0; i < shapes.Count; i++)
         {
             writer.Write(shapes[i].ShapeID);    // save shapeId and materialID first 
@@ -128,6 +177,7 @@ public class GameObjectSpawner : PersistableObject
             return;
         }
         int count = version < 0 ? -version : reader.ReadInt();
+        StartCoroutine(LoadLevel(version < 2 ? 1 : reader.ReadInt())); // Load Level index saved in file
         for (int i = 0; i < count; i++)
         {
             int shapeid = version > 0 ? reader.ReadInt() : 0;  // to avoid old save file conflicts
